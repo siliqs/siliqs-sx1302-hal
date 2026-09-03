@@ -212,6 +212,7 @@ struct lgw_conf_rxif_s {
 */
 struct lgw_conf_demod_s {
     uint8_t     multisf_datarate;   /*!> bitmask to enable spreading-factors for correlators (SF12 - SF5) */
+    uint8_t     multisf_preamble_symb_nb;  /*!> RX preamble length for multi-SF (ARB) channels, in symbols; 0 = use HAL built-in default (10) */
 };
 
 /**

@@ -880,7 +880,7 @@ int sx1302_lora_service_correlator_configure(struct lgw_conf_rxif_s * cfg) {
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-int sx1302_lora_modem_configure(uint32_t radio_freq_hz) {
+int sx1302_lora_modem_configure(uint32_t radio_freq_hz, uint8_t preamble_symb_nb) {
     uint16_t mantissa = 0;
     uint8_t exponent = 0;
     int err = LGW_REG_SUCCESS;
@@ -966,9 +966,10 @@ int sx1302_lora_modem_configure(uint32_t radio_freq_hz) {
     err |= lgw_reg_w(SX1302_REG_RX_TOP_FINE_TIMING_B_2_GAIN_I_PREAMB, 1);
     err |= lgw_reg_w(SX1302_REG_RX_TOP_FINE_TIMING_B_2_GAIN_I_PAYLOAD, 0);
 
-    /* Set preamble size to 10 (to handle 12 for SF5/SF6 and 8 for SF7->SF12) */
-    err |= lgw_reg_w(SX1302_REG_RX_TOP_TXRX_CFG7_PREAMBLE_SYMB_NB,  0); /* MSB */
-    err |= lgw_reg_w(SX1302_REG_RX_TOP_TXRX_CFG6_PREAMBLE_SYMB_NB, 10); /* LSB */
+    /* Set preamble size (default 10, to handle 12 for SF5/SF6 and 8 for SF7->SF12; overridable via preamble_symb_nb) */
+    uint16_t symb_nb = (preamble_symb_nb == 0) ? 10 : preamble_symb_nb;
+    err |= lgw_reg_w(SX1302_REG_RX_TOP_TXRX_CFG7_PREAMBLE_SYMB_NB, (symb_nb >> 8) & 0xFF); /* MSB */
+    err |= lgw_reg_w(SX1302_REG_RX_TOP_TXRX_CFG6_PREAMBLE_SYMB_NB, symb_nb & 0xFF); /* LSB */
 
     /* Freq2TimeDrift computation */
     if (calculate_freq_to_time_drift(radio_freq_hz, BW_125KHZ, &mantissa, &exponent) != 0) {

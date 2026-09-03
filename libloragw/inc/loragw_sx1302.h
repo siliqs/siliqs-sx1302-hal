@@ -215,7 +215,7 @@ int sx1302_lora_syncword(bool public, uint8_t lora_service_sf);
 @param radio_freq_hz    The center frequency of the RF chain (0 or 1)
 @return LGW_REG_SUCCESS if success, LGW_REG_ERROR otherwise
 */
-int sx1302_lora_modem_configure(uint32_t radio_freq_hz);
+int sx1302_lora_modem_configure(uint32_t radio_freq_hz, uint8_t preamble_symb_nb);
 
 /**
 @brief Configure the LoRa single-SF modem

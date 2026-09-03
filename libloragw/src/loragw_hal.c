@@ -724,6 +724,7 @@ int lgw_demod_setconf(struct lgw_conf_demod_s * conf) {
     CHECK_NULL(conf);
 
     CONTEXT_DEMOD.multisf_datarate = conf->multisf_datarate;
+    CONTEXT_DEMOD.multisf_preamble_symb_nb = conf->multisf_preamble_symb_nb;
 
     return LGW_HAL_SUCCESS;
 }
@@ -971,7 +972,7 @@ int lgw_start(void) {
         printf("ERROR: failed to configure SX1302 LoRa modem correlators\n");
         return LGW_HAL_ERROR;
     }
-    err = sx1302_lora_modem_configure(CONTEXT_RF_CHAIN[0].freq_hz);
+    err = sx1302_lora_modem_configure(CONTEXT_RF_CHAIN[0].freq_hz, CONTEXT_DEMOD.multisf_preamble_symb_nb);
     if (err != LGW_REG_SUCCESS) {
         printf("ERROR: failed to configure SX1302 LoRa modems\n");
         return LGW_HAL_ERROR;
